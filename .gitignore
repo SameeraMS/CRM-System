@@ -1,0 +1,20 @@
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# OS and editor
+.DS_Store
+.idea/
+.vscode/
+
+# Backend (Django/Python)
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.sqlite3
+backend/media/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
