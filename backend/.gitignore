@@ -1,0 +1,44 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# Uploaded media (keep in S3 or local, don't commit)
+media/
+
+# Static collected (if you run collectstatic)
+staticfiles/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Logs and cache
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor and OS
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*.swo
