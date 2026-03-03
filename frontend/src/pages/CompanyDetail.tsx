@@ -21,6 +21,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { dialogPaperSx, dialogTitleSx, dialogContentSx, dialogActionsSx, dialogBackdropSx } from '../components/AppDialog'
 
 interface CompanyDetailProps {
   basePath?: string
@@ -246,15 +247,17 @@ export function CompanyDetail({ basePath = '/dashboard' }: CompanyDetailProps) {
         )}
       </div>
 
-      <Dialog open={openContact} onClose={() => setOpenContact(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingContact ? 'Edit Contact' : 'Add Contact'}</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
+      <Dialog open={openContact} onClose={() => setOpenContact(false)} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>{editingContact ? 'Edit Contact' : 'Add Contact'}</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
           <TextField
             label="Full name"
             value={contactForm.full_name}
             onChange={(e) => setContactForm((f) => ({ ...f, full_name: e.target.value }))}
             fullWidth
             required
+            variant="outlined"
+            size="small"
           />
           <TextField
             label="Email"
@@ -264,23 +267,29 @@ export function CompanyDetail({ basePath = '/dashboard' }: CompanyDetailProps) {
             fullWidth
             required
             disabled={!!editingContact}
+            variant="outlined"
+            size="small"
           />
           <TextField
             label="Phone (8–15 digits)"
             value={contactForm.phone}
             onChange={(e) => setContactForm((f) => ({ ...f, phone: e.target.value }))}
             fullWidth
+            variant="outlined"
+            size="small"
           />
           <TextField
             label="Role"
             value={contactForm.role}
             onChange={(e) => setContactForm((f) => ({ ...f, role: e.target.value }))}
             fullWidth
+            variant="outlined"
+            size="small"
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenContact(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSaveContact} disabled={!contactForm.full_name.trim() || !contactForm.email.trim()}>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => setOpenContact(false)} variant="outlined" sx={{ borderRadius: 2 }}>Cancel</Button>
+          <Button variant="contained" onClick={handleSaveContact} disabled={!contactForm.full_name.trim() || !contactForm.email.trim()} sx={{ borderRadius: 2, px: 3 }}>
             {editingContact ? 'Update' : 'Create'}
           </Button>
         </DialogActions>

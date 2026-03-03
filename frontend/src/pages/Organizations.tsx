@@ -21,6 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { dialogPaperSx, dialogTitleSx, dialogContentSx, dialogActionsSx, dialogBackdropSx, DialogSection } from '../components/AppDialog'
 
 const pageSize = 20
 
@@ -196,41 +197,52 @@ export function Organizations() {
         </div>
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Add Organization & Admin</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
-          <TextField
-            label="Organization name"
-            value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            fullWidth
-            required
-          />
-          <TextField
-            select
-            label="Plan"
-            value={form.subscription_plan}
-            onChange={(e) => setForm((f) => ({ ...f, subscription_plan: e.target.value as 'Basic' | 'Pro' }))}
-            fullWidth
-          >
-            <MenuItem value="Basic">Basic</MenuItem>
-            <MenuItem value="Pro">Pro</MenuItem>
-          </TextField>
-          <TextField
-            label="BR number (unique)"
-            value={form.br_number}
-            onChange={(e) => setForm((f) => ({ ...f, br_number: e.target.value }))}
-            fullWidth
-          />
-          <div className="border-t pt-4 mt-2">
-            <p className="text-sm font-medium text-slate-600 mb-2">Admin user</p>
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>Add Organization & Admin</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
+          <div className="rounded-xl border border-slate-200/90 bg-white p-4 shadow-sm">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-indigo-600">Organization</p>
+            <div className="flex flex-col gap-3">
+              <TextField
+                label="Organization name"
+                value={form.name}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                fullWidth
+                required
+                variant="outlined"
+                size="small"
+              />
+              <TextField
+                select
+                label="Plan"
+                value={form.subscription_plan}
+                onChange={(e) => setForm((f) => ({ ...f, subscription_plan: e.target.value as 'Basic' | 'Pro' }))}
+                fullWidth
+                variant="outlined"
+                size="small"
+              >
+                <MenuItem value="Basic">Basic</MenuItem>
+                <MenuItem value="Pro">Pro</MenuItem>
+              </TextField>
+              <TextField
+                label="BR number (unique)"
+                value={form.br_number}
+                onChange={(e) => setForm((f) => ({ ...f, br_number: e.target.value }))}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </div>
+          </div>
+          <DialogSection title="Admin user">
             <TextField
               label="Username"
               value={form.admin_username}
               onChange={(e) => setForm((f) => ({ ...f, admin_username: e.target.value }))}
               fullWidth
-              className="mb-2"
               required
+              variant="outlined"
+              size="small"
             />
             <TextField
               label="Email"
@@ -238,8 +250,9 @@ export function Organizations() {
               value={form.admin_email}
               onChange={(e) => setForm((f) => ({ ...f, admin_email: e.target.value }))}
               fullWidth
-              className="mb-2"
               required
+              variant="outlined"
+              size="small"
             />
             <TextField
               label="Password"
@@ -247,8 +260,9 @@ export function Organizations() {
               value={form.admin_password}
               onChange={(e) => setForm((f) => ({ ...f, admin_password: e.target.value }))}
               fullWidth
-              className="mb-2"
               required
+              variant="outlined"
+              size="small"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -257,6 +271,7 @@ export function Organizations() {
                       onClick={() => setShowAdminPassword((p) => !p)}
                       onMouseDown={(e) => e.preventDefault()}
                       edge="end"
+                      size="small"
                     >
                       {showAdminPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
@@ -269,26 +284,32 @@ export function Organizations() {
               value={form.admin_telephone}
               onChange={(e) => setForm((f) => ({ ...f, admin_telephone: e.target.value }))}
               fullWidth
+              variant="outlined"
+              size="small"
             />
-          </div>
+          </DialogSection>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!form.name || !form.admin_username || !form.admin_email || !form.admin_password}>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => setOpen(false)} variant="outlined" sx={{ borderRadius: 2 }}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSubmit} disabled={!form.name || !form.admin_username || !form.admin_email || !form.admin_password} sx={{ borderRadius: 2, px: 3 }}>
             Create
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={editOpen} onClose={() => { setEditOpen(false); setEditingOrg(null) }} maxWidth="sm" fullWidth>
-        <DialogTitle>Edit Organization</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
+      <Dialog open={editOpen} onClose={() => { setEditOpen(false); setEditingOrg(null) }} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>Edit Organization</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
           <TextField
             label="Organization name"
             value={editForm.name}
             onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
             fullWidth
             required
+            variant="outlined"
+            size="small"
           />
           <TextField
             select
@@ -296,6 +317,8 @@ export function Organizations() {
             value={editForm.subscription_plan}
             onChange={(e) => setEditForm((f) => ({ ...f, subscription_plan: e.target.value as 'Basic' | 'Pro' }))}
             fullWidth
+            variant="outlined"
+            size="small"
           >
             <MenuItem value="Basic">Basic</MenuItem>
             <MenuItem value="Pro">Pro</MenuItem>
@@ -305,13 +328,13 @@ export function Organizations() {
             value={editForm.br_number}
             onChange={(e) => setEditForm((f) => ({ ...f, br_number: e.target.value }))}
             fullWidth
+            variant="outlined"
+            size="small"
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setEditOpen(false); setEditingOrg(null) }}>Cancel</Button>
-          <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name.trim()}>
-            Save
-          </Button>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => { setEditOpen(false); setEditingOrg(null) }} variant="outlined" sx={{ borderRadius: 2 }}>Cancel</Button>
+          <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name.trim()} sx={{ borderRadius: 2, px: 3 }}>Save</Button>
         </DialogActions>
       </Dialog>
     </motion.div>

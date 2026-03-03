@@ -22,6 +22,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { dialogPaperSx, dialogTitleSx, dialogContentSx, dialogActionsSx, dialogBackdropSx } from '../components/AppDialog'
 
 const ROLE_LABELS: Record<string, string> = {
   admin: 'Admin',
@@ -167,24 +168,11 @@ export function Team() {
         </div>
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Add Team Member</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
-          <TextField
-            label="Username"
-            value={form.username}
-            onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
-            fullWidth
-            required
-          />
-          <TextField
-            label="Email"
-            type="email"
-            value={form.email}
-            onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-            fullWidth
-            required
-          />
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>Add Team Member</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
+          <TextField label="Username" value={form.username} onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))} fullWidth required variant="outlined" size="small" />
+          <TextField label="Email" type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} fullWidth required variant="outlined" size="small" />
           <TextField
             label="Password"
             type={showPassword ? 'text' : 'password'}
@@ -192,61 +180,33 @@ export function Team() {
             onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
             fullWidth
             required
+            variant="outlined"
+            size="small"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    onClick={() => setShowPassword((p) => !p)}
-                    onMouseDown={(e) => e.preventDefault()}
-                    edge="end"
-                  >
+                  <IconButton aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((p) => !p)} onMouseDown={(e) => e.preventDefault()} edge="end" size="small">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
-          <TextField
-            label="First name"
-            value={form.first_name}
-            onChange={(e) => setForm((f) => ({ ...f, first_name: e.target.value }))}
-            fullWidth
-          />
-          <TextField
-            label="Last name"
-            value={form.last_name}
-            onChange={(e) => setForm((f) => ({ ...f, last_name: e.target.value }))}
-            fullWidth
-          />
-          <TextField
-            label="Telephone"
-            value={form.telephone}
-            onChange={(e) => setForm((f) => ({ ...f, telephone: e.target.value }))}
-            fullWidth
-          />
-          <FormControl fullWidth required>
+          <TextField label="First name" value={form.first_name} onChange={(e) => setForm((f) => ({ ...f, first_name: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <TextField label="Last name" value={form.last_name} onChange={(e) => setForm((f) => ({ ...f, last_name: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <TextField label="Telephone" value={form.telephone} onChange={(e) => setForm((f) => ({ ...f, telephone: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <FormControl fullWidth required size="small">
             <InputLabel id="team-role-label">Role</InputLabel>
-            <Select
-              labelId="team-role-label"
-              id="team-role"
-              value={form.role}
-              label="Role"
-              onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
-            >
+            <Select labelId="team-role-label" id="team-role" value={form.role} label="Role" onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}>
               {ROLE_OPTIONS.map((opt) => (
-                <MenuItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </MenuItem>
+                <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
               ))}
             </Select>
           </FormControl>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!form.username.trim() || !form.email.trim() || !form.password}>
-            Create
-          </Button>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => setOpen(false)} variant="outlined" sx={{ borderRadius: 2 }}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit} disabled={!form.username.trim() || !form.email.trim() || !form.password} sx={{ borderRadius: 2, px: 3 }}>Create</Button>
         </DialogActions>
       </Dialog>
     </motion.div>

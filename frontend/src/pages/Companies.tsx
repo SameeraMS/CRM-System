@@ -26,6 +26,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import SearchIcon from '@mui/icons-material/Search'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { dialogPaperSx, dialogTitleSx, dialogContentSx, dialogActionsSx, dialogBackdropSx, DialogSection } from '../components/AppDialog'
 
 interface CompaniesProps {
   basePath?: string
@@ -342,11 +343,11 @@ export function Companies({ basePath = '/dashboard/companies' }: CompaniesProps)
         </>
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Add Company</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>Add Company</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
           {isSuperAdmin && (
-            <FormControl fullWidth required>
+            <FormControl fullWidth required size="small">
               <InputLabel id="company-org-label">Organization</InputLabel>
               <Select
                 labelId="company-org-label"
@@ -360,36 +361,23 @@ export function Companies({ basePath = '/dashboard/companies' }: CompaniesProps)
               </Select>
             </FormControl>
           )}
-          <TextField
-            label="Name"
-            value={form.name}
-            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-            fullWidth
-            required
-          />
-          <TextField label="Industry" value={form.industry} onChange={(e) => setForm((f) => ({ ...f, industry: e.target.value }))} fullWidth />
-          <TextField label="Country" value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))} fullWidth />
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">Image / Logo</label>
-            <p className="text-xs text-slate-500">Select a logo image (optional). Stored on server or AWS S3.</p>
-            <div className="border-2 border-dashed border-indigo-200 rounded-lg p-4 text-center hover:border-indigo-400 bg-indigo-50/50 transition-colors">
-              <input
-                id="company-logo-upload"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)}
-                className="hidden"
-              />
-              <label htmlFor="company-logo-upload" className="cursor-pointer flex flex-col items-center gap-2">
+          <TextField label="Name" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} fullWidth required variant="outlined" size="small" />
+          <TextField label="Industry" value={form.industry} onChange={(e) => setForm((f) => ({ ...f, industry: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <TextField label="Country" value={form.country} onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <DialogSection title="Image / Logo">
+            <p className="text-xs text-slate-500">Optional. Stored on server or AWS S3.</p>
+            <div className="rounded-lg border-2 border-dashed border-indigo-200 bg-indigo-50/50 p-4 text-center transition-colors hover:border-indigo-400 hover:bg-indigo-50/70">
+              <input id="company-logo-upload" type="file" accept="image/*" onChange={(e) => setLogoFile(e.target.files?.[0] ?? null)} className="hidden" />
+              <label htmlFor="company-logo-upload" className="flex cursor-pointer flex-col items-center gap-2">
                 {logoFile && logoPreviewUrl ? (
                   <>
-                    <img src={logoPreviewUrl} alt="Preview" className="max-h-24 rounded object-contain border border-slate-200" />
-                    <span className="text-sm text-indigo-600 font-medium">{logoFile.name}</span>
-                    <span className="text-xs text-slate-500">Click to change image</span>
+                    <img src={logoPreviewUrl} alt="Preview" className="max-h-24 rounded-lg border border-slate-200 object-contain" />
+                    <span className="text-sm font-medium text-indigo-600">{logoFile.name}</span>
+                    <span className="text-xs text-slate-500">Click to change</span>
                   </>
                 ) : (
                   <>
-                    <svg className="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-12 w-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span className="text-sm font-medium text-slate-700">Click to select image</span>
@@ -398,81 +386,53 @@ export function Companies({ basePath = '/dashboard/companies' }: CompaniesProps)
                 )}
               </label>
             </div>
-            {logoFile && (
-              <Button size="small" onClick={() => setLogoFile(null)} color="secondary">Remove image</Button>
-            )}
-          </div>
+            {logoFile && <Button size="small" onClick={() => setLogoFile(null)} color="secondary" sx={{ alignSelf: 'flex-start' }}>Remove image</Button>}
+          </DialogSection>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={!form.name.trim() || (isSuperAdmin && !form.organizationId)}>
-            Create
-          </Button>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => setOpen(false)} variant="outlined" sx={{ borderRadius: 2 }}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit} disabled={!form.name.trim() || (isSuperAdmin && !form.organizationId)} sx={{ borderRadius: 2, px: 3 }}>Create</Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={editOpen} onClose={() => { setEditOpen(false); setEditingCompany(null) }} maxWidth="sm" fullWidth>
-        <DialogTitle>Edit Company</DialogTitle>
-        <DialogContent className="flex flex-col gap-4 pt-2">
-          <TextField
-            label="Name"
-            value={editForm.name}
-            onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
-            fullWidth
-            required
-          />
-          <TextField label="Industry" value={editForm.industry} onChange={(e) => setEditForm((f) => ({ ...f, industry: e.target.value }))} fullWidth />
-          <TextField label="Country" value={editForm.country} onChange={(e) => setEditForm((f) => ({ ...f, country: e.target.value }))} fullWidth />
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-slate-700">Image / Logo</label>
-            <p className="text-xs text-slate-500">Change logo (optional). Leave unchanged or select a new image.</p>
-            <div className="border-2 border-dashed border-indigo-200 rounded-lg p-4 text-center hover:border-indigo-400 bg-indigo-50/50 transition-colors">
-              <input
-                id="company-edit-logo-upload"
-                type="file"
-                accept="image/*"
-                onChange={(e) => setEditLogoFile(e.target.files?.[0] ?? null)}
-                className="hidden"
-              />
-              <label htmlFor="company-edit-logo-upload" className="cursor-pointer flex flex-col items-center gap-2">
+      <Dialog open={editOpen} onClose={() => { setEditOpen(false); setEditingCompany(null) }} maxWidth="sm" fullWidth PaperProps={{ sx: dialogPaperSx }} BackdropProps={{ sx: dialogBackdropSx }}>
+        <DialogTitle sx={dialogTitleSx}>Edit Company</DialogTitle>
+        <DialogContent sx={dialogContentSx}>
+          <TextField label="Name" value={editForm.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} fullWidth required variant="outlined" size="small" />
+          <TextField label="Industry" value={editForm.industry} onChange={(e) => setEditForm((f) => ({ ...f, industry: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <TextField label="Country" value={editForm.country} onChange={(e) => setEditForm((f) => ({ ...f, country: e.target.value }))} fullWidth variant="outlined" size="small" />
+          <DialogSection title="Image / Logo">
+            <p className="text-xs text-slate-500">Leave unchanged or select a new image.</p>
+            <div className="rounded-lg border-2 border-dashed border-indigo-200 bg-indigo-50/50 p-4 text-center transition-colors hover:border-indigo-400 hover:bg-indigo-50/70">
+              <input id="company-edit-logo-upload" type="file" accept="image/*" onChange={(e) => setEditLogoFile(e.target.files?.[0] ?? null)} className="hidden" />
+              <label htmlFor="company-edit-logo-upload" className="flex cursor-pointer flex-col items-center gap-2">
                 {editLogoFile && editLogoPreviewUrl ? (
                   <>
-                    <img src={editLogoPreviewUrl} alt="Preview" className="max-h-24 rounded object-contain border border-slate-200" />
-                    <span className="text-sm text-indigo-600 font-medium">{editLogoFile.name}</span>
-                    <span className="text-xs text-slate-500">Click to change image</span>
+                    <img src={editLogoPreviewUrl} alt="Preview" className="max-h-24 rounded-lg border border-slate-200 object-contain" />
+                    <span className="text-sm font-medium text-indigo-600">{editLogoFile.name}</span>
+                    <span className="text-xs text-slate-500">Click to change</span>
                   </>
                 ) : getEditDialogLogoSrc() ? (
                   <>
-                    <img
-                      src={getEditDialogLogoSrc()!}
-                      alt="Current"
-                      className="max-h-24 rounded object-contain border border-slate-200"
-                      referrerPolicy="no-referrer"
-                      onError={() => setEditLogoUrlFailed(true)}
-                    />
-                    <span className="text-xs text-slate-500">Click to replace with new image</span>
+                    <img src={getEditDialogLogoSrc()!} alt="Current" className="max-h-24 rounded-lg border border-slate-200 object-contain" referrerPolicy="no-referrer" onError={() => setEditLogoUrlFailed(true)} />
+                    <span className="text-xs text-slate-500">Click to replace</span>
                   </>
                 ) : (
                   <>
-                    <svg className="w-12 h-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="h-12 w-12 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     <span className="text-sm font-medium text-slate-700">Click to select image</span>
-                    <span className="text-xs text-slate-500">PNG, JPG or GIF</span>
                   </>
                 )}
               </label>
             </div>
-            {editLogoFile && (
-              <Button size="small" onClick={() => setEditLogoFile(null)} color="secondary">Clear new image</Button>
-            )}
-          </div>
+            {editLogoFile && <Button size="small" onClick={() => setEditLogoFile(null)} color="secondary" sx={{ alignSelf: 'flex-start' }}>Clear new image</Button>}
+          </DialogSection>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { setEditOpen(false); setEditingCompany(null) }}>Cancel</Button>
-          <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name.trim()}>
-            Save
-          </Button>
+        <DialogActions sx={dialogActionsSx}>
+          <Button onClick={() => { setEditOpen(false); setEditingCompany(null) }} variant="outlined" sx={{ borderRadius: 2 }}>Cancel</Button>
+          <Button variant="contained" onClick={handleEditSubmit} disabled={!editForm.name.trim()} sx={{ borderRadius: 2, px: 3 }}>Save</Button>
         </DialogActions>
       </Dialog>
     </motion.div>
